@@ -29,12 +29,7 @@ st.set_page_config(
 st.markdown("""
 <style>
     .stApp {
-        background: #ffffff;
-    }
-
-    /* 确保所有文字可见 */
-    body, .stMarkdown, p, label, span, div {
-        color: #222;
+        background: #fafbfc;
     }
 
     /* 卡片 */
@@ -46,32 +41,9 @@ st.markdown("""
         border: 1px solid #e0e3e7;
     }
 
-    .stButton > button {
-        border-radius: 6px;
-        font-weight: 500;
-        font-size: 0.95rem;
-        padding: 10px 0;
-        border: 1px solid #d0d5dd;
-        background: #f9fafb;
-        color: #333;
-    }
-    .stButton > button:hover {
-        border-color: #999;
-        background: #f3f4f6;
-    }
-
-    .stButton > button[kind="primary"] {
-        background: #1a1a2e;
-        color: white;
-        border: none;
-    }
-    .stButton > button[kind="primary"]:hover {
-        background: #2d2d44;
-    }
-
-    /* 等待画面 */
+    /* 等待动画 */
     @keyframes gentleRise {
-        from { opacity: 0; transform: translateY(12px); }
+        from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
     @keyframes softGlow {
@@ -80,12 +52,12 @@ st.markdown("""
     }
     .wait-container {
         text-align: center;
-        padding: 80px 20px;
+        padding: 60px 20px;
     }
     .wait-message {
         animation: gentleRise 2s ease-out;
-        color: #444;
-        font-size: 1.05rem;
+        color: #555;
+        font-size: 1rem;
         line-height: 2;
     }
     .wait-dot {
@@ -98,10 +70,6 @@ st.markdown("""
     }
     .wait-dot:nth-child(2) { animation-delay: 0.3s; }
     .wait-dot:nth-child(3) { animation-delay: 0.6s; }
-
-    .fade-in {
-        animation: gentleRise 0.3s ease-out;
-    }
 </style>
 """, unsafe_allow_html=True)
 
