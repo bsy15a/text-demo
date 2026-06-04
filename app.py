@@ -28,152 +28,72 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    /* ── 全局色调：深蓝 + 暖橙 ── */
-    :root {
-        --primary: #1a365d;
-        --accent: #ed8936;
-        --bg-soft: #f7fafc;
-        --text: #2d3748;
-        --border: #e2e8f0;
-    }
-
     .stApp {
-        background: linear-gradient(180deg, #f7fafc 0%, #edf2f7 100%);
+        background: #fafbfc;
     }
 
-    /* 卡片容器 */
     .card {
         background: white;
-        border-radius: 16px;
-        padding: 28px 32px;
-        margin: 16px 0;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        border: 1px solid #e2e8f0;
-        transition: box-shadow 0.2s;
-    }
-    .card:hover {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.10);
-    }
-
-    /* 高亮盒 */
-    .highlight-box {
-        background: linear-gradient(135deg, #fffaf0 0%, #fff5e6 100%);
-        border-left: 4px solid #ed8936;
-        padding: 16px 20px;
-        border-radius: 0 8px 8px 0;
-        margin: 12px 0;
-    }
-
-    /* 能力标签 */
-    .skill-tag {
-        display: inline-block;
-        background: #ebf8ff;
-        color: #2b6cb0;
-        padding: 3px 12px;
-        border-radius: 12px;
-        font-size: 13px;
-        margin: 3px 4px;
-        font-weight: 500;
-    }
-
-    /* 引用对话 */
-    .quote-box {
-        background: #f0f4ff;
-        border-radius: 12px;
-        padding: 16px 20px;
-        margin: 12px 0;
-        font-style: italic;
-        color: #4a5568;
-        border: 1px solid #c3dafe;
-    }
-
-    /* 按钮样式 */
-    .stButton > button {
         border-radius: 10px;
-        font-weight: 600;
-        padding: 10px 28px;
-        transition: all 0.2s;
+        padding: 24px 28px;
+        margin: 12px 0;
+        border: 1px solid #e8ecf0;
+    }
+
+    .highlight-box {
+        background: #fdf8f0;
+        border-left: 3px solid #c07030;
+        padding: 14px 18px;
+        border-radius: 0 6px 6px 0;
+        margin: 10px 0;
+    }
+
+    .stButton > button {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 9px 24px;
+        transition: all 0.15s;
     }
     .stButton > button:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
     }
 
-    /* ── 等待动画 ── */
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
+    /* 等待区域 - 治愈系 */
+    @keyframes softPulse {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1.0; }
     }
-    @keyframes shimmer {
-        0% { background-position: -200px 0; }
-        100% { background-position: 200px 0; }
-    }
-    @keyframes gentleBounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-8px); }
-    }
-    .thinking-indicator {
-        animation: pulse 2s ease-in-out infinite;
-        text-align: center;
-        padding: 20px;
-    }
-    .thinking-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #ed8936;
-        margin: 0 4px;
-        animation: gentleBounce 0.6s ease-in-out infinite;
-    }
-    .thinking-dot:nth-child(2) { animation-delay: 0.15s; }
-    .thinking-dot:nth-child(3) { animation-delay: 0.3s; }
-
-    /* 进度步骤条 */
-    .step-progress {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 0;
-    }
-    .step-dot {
-        width: 8px; height: 8px;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-    .step-dot.done { background: #48bb78; }
-    .step-dot.running { background: #ed8936; animation: pulse 1s infinite; }
-    .step-dot.waiting { background: #e2e8f0; }
-    .step-text { font-size: 13px; color: #718096; }
-    .step-text.active { color: #1a365d; font-weight: 600; }
-
-    /* ── 选择卡片样式（情景题用） ── */
-    .choice-card {
-        background: white;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 14px 18px;
-        margin: 6px 0;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-size: 14px;
-    }
-    .choice-card:hover {
-        border-color: #ed8936;
-        background: #fffaf0;
-    }
-    .choice-card.selected {
-        border-color: #ed8936;
-        background: #fff5e6;
-    }
-
-    /* 分步动画 */
-    .fade-in {
-        animation: fadeIn 0.5s ease-in;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
+    @keyframes gentleRise {
+        from { opacity: 0; transform: translateY(8px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+    .wait-container {
+        text-align: center;
+        padding: 32px 20px;
+        background: #fafbfc;
+        border-radius: 10px;
+        border: 1px dashed #d0d5dd;
+    }
+    .wait-message {
+        animation: gentleRise 2s ease-out;
+        color: #555;
+        font-size: 14px;
+        line-height: 1.8;
+    }
+    .wait-dot {
+        display: inline-block;
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: #999;
+        margin: 0 3px;
+        animation: softPulse 1.2s ease-in-out infinite;
+    }
+    .wait-dot:nth-child(2) { animation-delay: 0.3s; }
+    .wait-dot:nth-child(3) { animation-delay: 0.6s; }
+
+    .fade-in {
+        animation: gentleRise 0.4s ease-out;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -243,7 +163,7 @@ def call_qwen(prompt: str, system_prompt: str = "") -> str:
             json={
                 "model": "qwen-plus",
                 "messages": messages,
-                "temperature": 0.7,
+                "temperature": 0.4,
                 "max_tokens": 3000,
             },
             timeout=90,
@@ -305,13 +225,13 @@ with st.sidebar:
 
     st.markdown("---")
 
-    st.markdown("### 💡 使用指南")
+    st.markdown("### 使用指南")
     st.markdown("""
-    1. **聊聊你的经历** — 不用担心"不够好"
-    2. **回答情景题** — 可以多选，没有标准答案
-    3. **看看 AI 的发现** — 你可能从未想过的路径
-    4. **获取学习计划** — 30 天行动计划
-    5. **面试准备** — 跨专业也能自信面试
+    1. **聊聊你的经历** — 不用觉得"不够好"
+    2. **回答情景题** — 多选，没标准答案
+    3. **看看发现** — 你可能忽略的可能性
+    4. **获取学习计划** — 可执行的 30 天路线
+    5. **面试准备** — 跨专业也有底气
     """)
 
     st.markdown("---")
@@ -361,9 +281,9 @@ for idx, col in enumerate([col_l1, col_l2]):
         )
 
 phase_labels = {
-    1: "发现自我 — 你不知道自己有什么，我帮你挖出来",
+    1: "发现自我 — 讲讲你做过的事",
     2: "规划路径 — 从「可能」到「可行」",
-    3: "自信面试 — 跨专业不是短板，是你独特的视角",
+    3: "自信面试 — 跨专业也有底气",
 }
 st.markdown(
     f'<p style="text-align:center;color:#4a5568;font-size:14px;margin:4px 0 20px 0;">'
@@ -392,9 +312,9 @@ if st.session_state.phase == 1:
 
         st.markdown("""
         <div class="card fade-in">
-            <h3 style="margin-top:0;">📝 别担心"不够好"，我们先聊聊你做过的事</h3>
-            <p style="color:#718096;">不需要什么高大上的经历。哪怕只是课程作业、社团杂活、帮朋友的忙——
-            在 AI 眼里，这些都可能是你还没发现的竞争力。</p>
+            <h3 style="margin-top:0;font-size:1.2em;">先聊聊你做过的事</h3>
+            <p style="color:#666;">不用很厉害的经历。课程作业、社团干活、帮过朋友的忙，都算。
+            很多能力你自己可能都没注意到。</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -453,9 +373,9 @@ if st.session_state.phase == 1:
         st.markdown("---")
         st.markdown("""
         <div class="card fade-in">
-            <h3 style="margin-top:0;">🧠 情景选择题 — 多选题，选你觉得像的（不限个数）</h3>
-            <p style="color:#718096;">
-                没有标准答案，甚至可以全选。如果觉得哪个选项都不太对，选「以上都不太符合」并在下方补充你真实的想法。
+            <h3 style="margin-top:0;font-size:1.1em;">情景选择题 - 多选，选你觉得像的就行</h3>
+            <p style="color:#666;">
+                没有标准答案。如果都不像，选「以上都不太符合」然后用自己的话补充。
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -558,19 +478,33 @@ if st.session_state.phase == 1:
 
         submit_col, _ = st.columns([1, 3])
         with submit_col:
-            if st.button("🔍 开始分析，发现你的可能性", type="primary", disabled=not can_submit, use_container_width=True):
+            if st.button("开始分析", type="primary", disabled=not can_submit, use_container_width=True):
                 if not can_submit:
                     st.warning("请至少填写专业、一段经历，并至少选择或补充一个偏好描述")
                 else:
                     # ── 用 st.status 分步显示进度（解决等待焦虑） ──
-                    with st.status("🧭 AI 正在逐层分析你的可能性...", expanded=True) as analysis_status:
+                    with st.status("正在分析...", expanded=True) as analysis_status:
 
-                        st.markdown("""
-                        <div class="thinking-indicator">
-                            <span class="thinking-dot"></span>
-                            <span class="thinking-dot"></span>
-                            <span class="thinking-dot"></span>
-                            <span style="margin-left:10px;color:#718096;">第一步：从你的经历中提取隐性能力...</span>
+                        import random
+                        healing_messages = [
+                            "每个人走过的路都算数，即使当时觉得平平无奇",
+                            "很多能力就像呼吸，你一直在用，却从未注意过它",
+                            "你做过的每一件小事，都在悄悄塑造你",
+                            "不用担心\"不够好\"，重要的是你做了什么",
+                            "有时候别人看到你的闪光点，比你自己更清楚",
+                            "慢慢来，好的发现值得等待",
+                            "每段经历都是拼图的一块，现在我们来拼起来看看",
+                        ]
+                        msg = random.choice(healing_messages)
+
+                        st.markdown(f"""
+                        <div class="wait-container">
+                            <div class="wait-message">{msg}</div>
+                            <div style="margin-top:16px;">
+                                <span class="wait-dot"></span>
+                                <span class="wait-dot"></span>
+                                <span class="wait-dot"></span>
+                            </div>
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -615,21 +549,29 @@ if st.session_state.phase == 1:
 
 6. 根据偏好选择，推断 TA 可能适合的工作类型（不是具体岗位，是工作性质）
 
-请用温暖、鼓励但专业的语气。不要用 AI 套话。直接说发现。"""
+请用务实、平静的语气。不要用感叹号。不要过度抬高——你是在分析，不是在推销。直接说发现。如果某些推断把握不大，请标注'可能'。"""
 
                         abilities = call_qwen(
                             ability_prompt,
-                            system_prompt="你是一位温和但犀利的职业规划师。你善于从看似普通的经历中发现闪光点。你说话直接、具体、不虚。每次输出都引用用户的原文作为证据。不要把'用过软件'等同于'熟练掌握'。",
+                            system_prompt="你是一位务实、克制的职业规划师。说话风格：具体、有据、不煽情。不使用'惊人''卓越''一定会'等过度肯定词汇。不把'用过软件'等同于'熟练掌握'。每次输出都引用用户原文作为证据，不确定的地方就说'可能'。",
                         )
                         st.session_state.abilities_raw = abilities
 
                         # Step 2 提示
-                        st.markdown("""
-                        <div class="thinking-indicator">
-                            <span class="thinking-dot"></span>
-                            <span class="thinking-dot"></span>
-                            <span class="thinking-dot"></span>
-                            <span style="margin-left:10px;color:#718096;">第二步：匹配跨界职业路径，搜索市场真实需求...</span>
+                        msg2 = random.choice([
+                            "你的能力可能适合一些你从未想过的方向",
+                            "换个角度看自己，会发现新的可能性",
+                            "有时候合适的工作，不在你原本的视野里",
+                            "跨出专业的第一步，其实你已经准备好了",
+                        ])
+                        st.markdown(f"""
+                        <div class="wait-container">
+                            <div class="wait-message">{msg2}</div>
+                            <div style="margin-top:16px;">
+                                <span class="wait-dot"></span>
+                                <span class="wait-dot"></span>
+                                <span class="wait-dot"></span>
+                            </div>
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -670,7 +612,14 @@ if st.session_state.phase == 1:
 ### 🔖 路径三（对口参考）：[本专业方向]
 - **匹配说明**：[结合学生真实经历，说明为什么这些对口方向也适合 TA —— 2-3 句话]
 - **代表岗位**：[列举 2-3 个具体岗位名称]
-- **说明**：以上为专业对口方向，仅供参考。如果还在迷茫，可以试着接触路径一和路径二的跨界方向。"""
+- **说明**：以上为专业对口方向，仅供参考。如果还在迷茫，可以试着接触路径一和路径二的跨界方向。
+
+## 语气和内容约束：
+- 不要使用"惊人""卓越""绝对""一定可以""包你满意"等过度肯定或推销性词汇
+- 薪资数据标注"参考范围"，不要写虚高数字。如果不确定就说"建议查招聘平台获取最新数据"
+- "为什么你能做"部分必须引用学生原文中的具体细节，不许凭空编造能力
+- 如果某项推断把握不大，标注"可能"或"或许"
+- 不要用感叹号，保持平静务实的语气"""
 
                         paths = call_qwen(path_prompt)
                         st.session_state.career_paths = paths
@@ -694,8 +643,8 @@ if st.session_state.phase == 1:
 
         st.markdown("""
         <div style="text-align:center; padding:20px 0 10px 0;" class="fade-in">
-            <h2 style="color:#1a365d;">🌟 基于你的真实经历，AI 为你发现的可能性</h2>
-            <p style="color:#718096;">路径一、二为跨界方向（重点探索）· 路径三为专业对口参考</p>
+            <h2 style="color:#1a365d;">基于你的经历，看看这些方向</h2>
+            <p style="color:#718096;">前两条是跨界探索，第三条是本专业参考</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -828,9 +777,10 @@ if st.session_state.phase == 2:
 - **怎么用**（看哪些章节/做哪些练习）
 
 请注意：
-- ⚠️ 学习任务面向的是习惯被动学习的大学生，要像课程表一样具体——告诉 TA"这周看哪几个视频、做完哪个练习"
+- 学习任务面向的是习惯被动学习的大学生，要像课程表一样具体——告诉 TA"这周看哪几个视频、做完哪个练习"
 - 产出物必须是可以展示的，不能是"理解了某个概念"
-- 考虑大学生的实际时间和精力（每周 10-15 小时）"""
+- 考虑大学生的实际时间和精力（每周 10-15 小时）
+- B站 UP主名称和课程标题必须是真实存在的，不确定的就写"在B站搜索XXX关键词找高播放量教程"而非编造一个名字"""
 
                 plan = call_qwen(plan_prompt)
                 st.session_state.learning_plan = plan
