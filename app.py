@@ -29,71 +29,84 @@ st.set_page_config(
 st.markdown("""
 <style>
     .stApp {
-        background: #fafbfc;
+        background: #ffffff;
     }
 
+    /* 卡片 - 极简 */
     .card {
         background: white;
-        border-radius: 10px;
+        border-radius: 6px;
         padding: 24px 28px;
-        margin: 12px 0;
-        border: 1px solid #e8ecf0;
-    }
-
-    .highlight-box {
-        background: #fdf8f0;
-        border-left: 3px solid #c07030;
-        padding: 14px 18px;
-        border-radius: 0 6px 6px 0;
         margin: 10px 0;
+        border: 1px solid #eef0f2;
     }
 
     .stButton > button {
-        border-radius: 8px;
+        border-radius: 6px;
         font-weight: 500;
-        padding: 9px 24px;
-        transition: all 0.15s;
+        font-size: 0.95rem;
+        padding: 12px 0;
+        width: 100%;
+        transition: all 0.12s;
+        border: 1px solid #d0d5dd;
+        background: #f9fafb;
+        color: #333;
     }
     .stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        border-color: #999;
+        background: #f3f4f6;
     }
 
-    /* 等待区域 - 治愈系 */
-    @keyframes softPulse {
-        0%, 100% { opacity: 0.4; }
-        50% { opacity: 1.0; }
+    /* 主按钮 */
+    .stButton > button[kind="primary"] {
+        background: #1a1a2e;
+        color: white;
+        border: none;
     }
+    .stButton > button[kind="primary"]:hover {
+        background: #2d2d44;
+    }
+
+    /* 等待画面 - 全屏沉浸 */
     @keyframes gentleRise {
-        from { opacity: 0; transform: translateY(8px); }
+        from { opacity: 0; transform: translateY(12px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    .wait-container {
-        text-align: center;
-        padding: 32px 20px;
+    @keyframes softGlow {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.8; }
+    }
+    .fullscreen-wait {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
         background: #fafbfc;
-        border-radius: 10px;
-        border: 1px dashed #d0d5dd;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        text-align: center;
     }
     .wait-message {
         animation: gentleRise 2s ease-out;
-        color: #555;
-        font-size: 14px;
-        line-height: 1.8;
+        color: #444;
+        font-size: 1.05rem;
+        line-height: 2;
+        max-width: 480px;
     }
     .wait-dot {
         display: inline-block;
-        width: 6px; height: 6px;
+        width: 5px; height: 5px;
         border-radius: 50%;
-        background: #999;
+        background: #aaa;
         margin: 0 3px;
-        animation: softPulse 1.2s ease-in-out infinite;
+        animation: softGlow 1.4s ease-in-out infinite;
     }
     .wait-dot:nth-child(2) { animation-delay: 0.3s; }
     .wait-dot:nth-child(3) { animation-delay: 0.6s; }
 
     .fade-in {
-        animation: gentleRise 0.4s ease-out;
+        animation: gentleRise 0.3s ease-out;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -143,10 +156,22 @@ for key, default in DEFAULTS.items():
 # ╚══════════════════════════════════════════════════════════════╝
 
 def call_qwen(prompt: str, system_prompt: str = "") -> str:
-    """调用通义千问 API，返回文本结果。失败时返回错误信息字符串。"""
+    """调用 AI API，支持多模型切换。"""
     api_key = st.session_state.api_key.strip()
     if not api_key:
-        return "⚠️ 请先在左侧边栏输入通义千问 API Key"
+        return "请先在左侧边栏输入 API Key"
+
+    model_raw = st.session_state.get("model", "qwen-plus（推荐，稳定）")
+
+    if "deepseek" in model_raw:
+        endpoint = "https://api.deepseek.com/v1/chat/completions"
+        model_id = "deepseek-chat"
+    elif "turbo" in model_raw:
+        endpoint = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+        model_id = "qwen-turbo"
+    else:
+        endpoint = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+        model_id = "qwen-plus"
 
     messages = []
     if system_prompt:
@@ -155,13 +180,13 @@ def call_qwen(prompt: str, system_prompt: str = "") -> str:
 
     try:
         resp = requests.post(
-            "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+            endpoint,
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
             },
             json={
-                "model": "qwen-plus",
+                "model": model_id,
                 "messages": messages,
                 "temperature": 0.4,
                 "max_tokens": 3000,
@@ -172,18 +197,18 @@ def call_qwen(prompt: str, system_prompt: str = "") -> str:
             data = resp.json()
             return data["choices"][0]["message"]["content"]
         else:
-            return f"❌ API 错误 (HTTP {resp.status_code}): {resp.text[:300]}"
+            return f"API 错误 (HTTP {resp.status_code}): {resp.text[:300]}"
     except requests.Timeout:
-        return "❌ 请求超时，请重试（AI 思考时间较长）"
+        return "请求超时，请重试"
     except Exception as e:
-        return f"❌ 请求失败: {str(e)}"
+        return f"请求失败: {str(e)}"
 
 
 def is_api_error(text: str | None) -> bool:
     """检查 AI 返回的文本是否为错误信息。"""
     if text is None:
         return True
-    return text.startswith("❌") or text.startswith("⚠️")
+    return text.startswith("API 错误") or text.startswith("请求超时") or text.startswith("请求失败") or text.startswith("请先")
 
 
 # ╔══════════════════════════════════════════════════════════════╗
@@ -200,16 +225,24 @@ with st.sidebar:
     """, unsafe_allow_html=True)
     st.markdown("---")
 
-    st.markdown("### 🔑 API 设置")
+    st.markdown("### API 设置")
     api_key_input = st.text_input(
-        "通义千问 API Key",
+        "通义千问 / DeepSeek API Key",
         type="password",
         value=st.session_state.api_key,
         placeholder="sk-...",
-        help="在阿里云 DashScope 申请",
+        help="支持 阿里云 DashScope 或 DeepSeek API Key",
     )
     if api_key_input != st.session_state.api_key:
         st.session_state.api_key = api_key_input
+
+    model_choice = st.selectbox(
+        "模型选择",
+        ["qwen-plus（推荐，稳定）", "qwen-turbo（更快）", "deepseek-chat（速度快，中文好）"],
+        index=0,
+        help="换模型可以加快分析速度",
+    )
+    st.session_state.model = model_choice
 
     st.markdown("---")
 
