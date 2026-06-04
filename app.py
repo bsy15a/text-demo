@@ -32,22 +32,25 @@ st.markdown("""
         background: #ffffff;
     }
 
-    /* 卡片 - 极简 */
+    /* 确保所有文字可见 */
+    body, .stMarkdown, p, label, span, div {
+        color: #222;
+    }
+
+    /* 卡片 */
     .card {
         background: white;
         border-radius: 6px;
         padding: 24px 28px;
         margin: 10px 0;
-        border: 1px solid #eef0f2;
+        border: 1px solid #e0e3e7;
     }
 
     .stButton > button {
         border-radius: 6px;
         font-weight: 500;
         font-size: 0.95rem;
-        padding: 12px 0;
-        width: 100%;
-        transition: all 0.12s;
+        padding: 10px 0;
         border: 1px solid #d0d5dd;
         background: #f9fafb;
         color: #333;
@@ -57,7 +60,6 @@ st.markdown("""
         background: #f3f4f6;
     }
 
-    /* 主按钮 */
     .stButton > button[kind="primary"] {
         background: #1a1a2e;
         color: white;
@@ -67,7 +69,7 @@ st.markdown("""
         background: #2d2d44;
     }
 
-    /* 等待画面 - 全屏沉浸 */
+    /* 等待画面 */
     @keyframes gentleRise {
         from { opacity: 0; transform: translateY(12px); }
         to { opacity: 1; transform: translateY(0); }
@@ -76,23 +78,15 @@ st.markdown("""
         0%, 100% { opacity: 0.3; }
         50% { opacity: 0.8; }
     }
-    .fullscreen-wait {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: #fafbfc;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 999;
+    .wait-container {
         text-align: center;
+        padding: 80px 20px;
     }
     .wait-message {
         animation: gentleRise 2s ease-out;
         color: #444;
         font-size: 1.05rem;
         line-height: 2;
-        max-width: 480px;
     }
     .wait-dot {
         display: inline-block;
