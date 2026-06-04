@@ -1006,7 +1006,6 @@ st.markdown("""
     <p>🧭 <strong>真迹职痕</strong> v1.1 — 你不只是你学的那个专业</p>
     <p>智联招聘「AI+求职」创新大赛参赛作品 · 2026 | AI+求职赛道</p>
     <p style="font-size:11px; margin-top:8px;">
-        本 Demo 使用 通义千问 (Qwen-Plus) 大模型提供 AI 能力 |
         所有分析结果由 AI 生成，仅供参考
     </p>
 </div>
