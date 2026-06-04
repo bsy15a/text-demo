@@ -28,20 +28,6 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    .stApp {
-        background: #fafbfc;
-    }
-
-    /* 卡片 */
-    .card {
-        background: white;
-        border-radius: 6px;
-        padding: 24px 28px;
-        margin: 10px 0;
-        border: 1px solid #e0e3e7;
-    }
-
-    /* 等待动画 */
     @keyframes gentleRise {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -50,15 +36,13 @@ st.markdown("""
         0%, 100% { opacity: 0.3; }
         50% { opacity: 0.8; }
     }
-    .wait-container {
-        text-align: center;
-        padding: 60px 20px;
-    }
     .wait-message {
         animation: gentleRise 2s ease-out;
         color: #555;
         font-size: 1rem;
         line-height: 2;
+        text-align: center;
+        padding: 40px 20px;
     }
     .wait-dot {
         display: inline-block;
