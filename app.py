@@ -72,6 +72,7 @@ DEFAULTS = {
     "exp_q2": "",
     "exp_q3": "",
     "exp_q4": "",
+    "exp_hobby": "",  # 个人兴趣
     # 情景题：改为多选列表 + 自定义补充
     "pref_q1": [],   # 工作节奏（多选）
     "pref_q2": [],   # 成就感来源（多选）
@@ -348,6 +349,14 @@ if st.session_state.phase == 1:
                 height=100,
             )
 
+        # ── 兴趣 ──
+        st.session_state.exp_hobby = st.text_area(
+            "🎯 课余时间你喜欢做什么？不用多正经，打游戏、追剧、刷视频、研究穿搭……都算兴趣。",
+            value=st.session_state.exp_hobby,
+            placeholder="比如：喜欢打王者荣耀、喜欢研究穿搭博主的搭配、喜欢在B站看历史科普视频、喜欢捣鼓数码产品……\n\n越具体越好——这是在别人看不见你的时候，你真正在花时间的事。",
+            height=80,
+        )
+
         # ── 偏好探测（改为多选 + 自定义） ──
         st.markdown("---")
         st.markdown("""
@@ -502,6 +511,7 @@ if st.session_state.phase == 1:
 2. 社团/活动经历：{st.session_state.exp_q2 or '（未填写）'}
 3. 朋友常找 TA 帮忙的事：{st.session_state.exp_q3 or '（未填写）'}
 4. 接触过/使用过的软件工具：{st.session_state.exp_q4 or '（未填写）'}
+5. 课余兴趣爱好：{st.session_state.exp_hobby or '（未填写）'}
 
 【TA 的偏好选择（多选）】
 - 工作状态偏好：{', '.join(st.session_state.pref_q1) if st.session_state.pref_q1 else '（未选择）'}{(' / 补充：' + st.session_state.get('pref_q1_custom','')) if st.session_state.get('pref_q1_custom','').strip() else ''}
@@ -526,7 +536,8 @@ if st.session_state.phase == 1:
 
 5. 汇总 TA 的能力画像：3-5 个核心可迁移能力维度
 
-6. 根据偏好选择，推断 TA 可能适合的工作类型（不是具体岗位，是工作性质）
+6. **从兴趣中提取隐性偏好**：如果学生提到了兴趣爱好，从中推断 TA 自然状态下的倾向（例如"喜欢研究穿搭"可能暗示审美判断力和对趋势的敏感度，"喜欢打王者"可能暗示团队协作和快速决策偏好）。但注意不要过度解读——只提取与工作习惯可能相关的信号，不要把"爱看动漫"直接等同于"适合做动漫产业"
+7. 根据偏好选择，推断 TA 可能适合的工作类型（不是具体岗位，是工作性质）
 
 请用务实、平静的语气。不要用感叹号。不要过度抬高——你是在分析，不是在推销。直接说发现。如果某些推断把握不大，请标注'可能'。"""
 
