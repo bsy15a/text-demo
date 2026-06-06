@@ -315,30 +315,30 @@ if st.session_state.phase == 1:
             )
 
             st.session_state.exp_q1_name = st.text_input(
-                "📚 课程名称或作业类型？（一条就够）",
+                "📚 课设/大作业里，哪件事别人觉得难，你却觉得轻松？",
                 value=st.session_state.get("exp_q1_name", ""),
-                placeholder="比如：Python课设、市场营销课期末报告、数据结构大作业...",
+                placeholder="不用描述整个项目，说一件具体的。比如：\"大家都不愿意上台讲PPT，但我觉得把复杂的东西讲清楚特别有成就感\"",
             )
             st.session_state.exp_q1_detail = st.text_area(
-                "└ 在这个作业/课程里，你具体做了什么？",
+                "具体做了什么？你负责的部分里，最投入的是哪一块？",
                 value=st.session_state.get("exp_q1_detail", ""),
-                placeholder="用自己的话描述你做的事，越具体越好。比如：用Python写了一个学生成绩管理系统，负责数据库设计和界面部分，最后做了一次10分钟的课堂演示...",
+                placeholder="比如：\"我负责数据库设计，花了一个周末把ER图画了三版\"或\"我主讲的那部分，自己对着镜子练了五遍\"——写让你骄傲的细节",
                 height=90,
             )
             st.session_state.exp_q1 = f"课程：{st.session_state.exp_q1_name}；具体内容：{st.session_state.exp_q1_detail}" if st.session_state.exp_q1_name or st.session_state.exp_q1_detail else ""
 
             st.session_state.exp_q2 = st.text_area(
-                "🎪 参加过什么社团或活动？在里面干过什么具体的事？",
+                "🎪 社团或活动里，有没有一次你觉得「这事不该这么干」的时刻？",
                 value=st.session_state.exp_q2,
-                placeholder="比如：在学生会做了半年的公众号排版、组织过一次班级春游、帮社团拉过赞助...",
+                placeholder="比如：\"部门招新海报发了好几次没人看，我提议改在抖音发短视频，结果招到了最多的一届\"——你看到问题并试图解决的那个瞬间",
                 height=100,
             )
 
         with col_b:
             st.session_state.exp_q3 = st.text_area(
-                "🤝 朋友一般因为什么事来找你帮忙？",
+                "🤝 最近一次朋友因为什么事来找你？你帮TA的那一下是什么感觉？",
                 value=st.session_state.exp_q3,
-                placeholder="比如：PPT 做得好大家让你帮忙改、电脑出问题找你修、心情不好的时候找你聊天、选课的时候问你建议...\n\n这个问题的答案特别能反映你的隐性优势。",
+                placeholder="比如：\"室友的笔记本蓝屏了，我帮他重装了系统，他请我喝了杯奶茶\"或\"朋友失恋找我聊到凌晨，后来他说那次聊天让他想通了很多\"——越真实越好",
                 height=100,
             )
 
@@ -353,7 +353,7 @@ if st.session_state.phase == 1:
         st.session_state.exp_hobby = st.text_area(
             "🎯 课余时间你喜欢做什么？不用多正经，打游戏、追剧、刷视频、研究穿搭……都算兴趣。",
             value=st.session_state.exp_hobby,
-            placeholder="比如：喜欢打王者荣耀、喜欢研究穿搭博主的搭配、喜欢在B站看历史科普视频、喜欢捣鼓数码产品……\n\n越具体越好——这是在别人看不见你的时候，你真正在花时间的事。",
+            placeholder="比如：\"每周末必和朋友开三局王者，主玩辅助位，喜欢研究装备搭配\"或\"刷B站看到有意思的科普视频会顺着推荐看一整个下午\"——别写\"喜欢读书跑步\"这种套话，写你真实在干的",
             height=80,
         )
 
