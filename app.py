@@ -4,7 +4,7 @@
 智联招聘「AI+求职」创新大赛参赛作品
 
 核心洞察：
-    超过60%的大学生最终从事了与专业不完全对口的工作，
+    约三成大学生最终从事了与专业不对口的工作，每年涉及数百万毕业生，
     但市面上所有求职工具都假设用户"知道自己要找什么工作"。
     本产品服务于那些"不知道自己有什么、能去哪"的迷茫大学生。
 
@@ -77,7 +77,6 @@ DEFAULTS = {
     "pref_q1": [],   # 工作节奏（多选）
     "pref_q2": [],   # 成就感来源（多选）
     "pref_q3": [],   # 团队角色（多选）
-    "pref_q4": [],   # 不确定性态度（多选）
     "pref_custom": "",  # 自定义补充
     "major": "",
     "grade": "大三",
@@ -190,6 +189,8 @@ with st.sidebar:
         help="换模型可以加快分析速度",
     )
     st.session_state.model = model_choice
+    if "deepseek" in model_choice:
+        st.caption("⚠️ DeepSeek 建议连接 WiFi 使用，移动数据可能无法访问 api.deepseek.com")
 
     st.markdown("---")
 
