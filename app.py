@@ -36,13 +36,26 @@ st.markdown("""
         0%, 100% { opacity: 0.3; }
         50% { opacity: 0.8; }
     }
+    @keyframes thinkPulse {
+        0%, 100% { opacity: 0.2; transform: scale(0.8); }
+        50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    /* 等待容器：居中显示疗愈文案 */
+    .wait-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 0;
+    }
     .wait-message {
         animation: gentleRise 2s ease-out;
         color: #555;
         font-size: 1rem;
         line-height: 2;
         text-align: center;
-        padding: 40px 20px;
+        padding: 20px 20px 10px 20px;
     }
     .wait-dot {
         display: inline-block;
@@ -54,6 +67,37 @@ st.markdown("""
     }
     .wait-dot:nth-child(2) { animation-delay: 0.3s; }
     .wait-dot:nth-child(3) { animation-delay: 0.6s; }
+
+    /* 阶段2 思考指示器 */
+    .thinking-indicator {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 0;
+    }
+    .thinking-dot {
+        display: inline-block;
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: #718096;
+        animation: thinkPulse 1.2s ease-in-out infinite;
+    }
+    .thinking-dot:nth-child(2) { animation-delay: 0.2s; }
+    .thinking-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    /* 信息卡片 */
+    .card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 18px 22px;
+        margin-bottom: 16px;
+    }
+
+    /* 淡入动画 */
+    .fade-in {
+        animation: gentleRise 0.6s ease-out;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -172,15 +216,6 @@ with st.sidebar:
     st.markdown("---")
 
     st.markdown("### API 设置")
-    api_key_input = st.text_input(
-        "通义千问 / DeepSeek API Key",
-        type="password",
-        value=st.session_state.api_key,
-        placeholder="sk-...",
-        help="支持 阿里云 DashScope 或 DeepSeek API Key",
-    )
-    if api_key_input != st.session_state.api_key:
-        st.session_state.api_key = api_key_input
 
     model_choice = st.selectbox(
         "模型选择",
@@ -188,9 +223,39 @@ with st.sidebar:
         index=0,
         help="换模型可以加快分析速度",
     )
+
+    # 检测模型切换：Qwen↔DeepSeek Key 不通用，切换时清空
+    prev_model = st.session_state.get("model", "")
+    model_switched_to_deepseek = (
+        "deepseek" in model_choice and "deepseek" not in prev_model and prev_model != ""
+    )
+    model_switched_to_qwen = (
+        "deepseek" not in model_choice and "deepseek" in prev_model
+    )
+    if model_switched_to_deepseek or model_switched_to_qwen:
+        st.session_state.api_key = ""
+
     st.session_state.model = model_choice
+
     if "deepseek" in model_choice:
-        st.caption("⚠️ DeepSeek 建议连接 WiFi 使用，移动数据可能无法访问 api.deepseek.com")
+        key_label = "DeepSeek API Key"
+        key_placeholder = "sk-... (DeepSeek 平台申请)"
+        key_help = "前往 platform.deepseek.com 申请，与阿里云 Key 不通用"
+        st.caption("⚠️ DeepSeek Key 与通义千问 Key 不通用，切换模型后需重新输入")
+    else:
+        key_label = "通义千问 API Key（DashScope）"
+        key_placeholder = "sk-... (阿里云 DashScope 申请)"
+        key_help = "前往 dashscope.aliyuncs.com 申请，与 DeepSeek Key 不通用"
+
+    api_key_input = st.text_input(
+        key_label,
+        type="password",
+        value=st.session_state.api_key,
+        placeholder=key_placeholder,
+        help=key_help,
+    )
+    if api_key_input != st.session_state.api_key:
+        st.session_state.api_key = api_key_input
 
     st.markdown("---")
 
